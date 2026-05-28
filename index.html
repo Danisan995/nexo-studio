@@ -10,59 +10,26 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --bg: #0a0a0a;
-      --surface: #111111;
-      --surface-hover: #181818;
-      --border: rgba(255,255,255,0.07);
-      --border-hover: rgba(255,255,255,0.16);
-      --text-primary: #f0ede8;
-      --text-secondary: #777;
-      --text-muted: #3a3a3a;
-      --accent: #c8b89a;
-      --sidebar-w: 280px;
+      --bg: #0a0a0a; --surface: #111111; --surface-hover: #181818;
+      --border: rgba(255,255,255,0.07); --border-hover: rgba(255,255,255,0.16);
+      --text-primary: #f0ede8; --text-secondary: #777; --text-muted: #3a3a3a;
+      --accent: #c8b89a; --sidebar-w: 280px;
     }
     html { scroll-behavior: smooth; }
-    body {
-      background: var(--bg);
-      color: var(--text-primary);
-      font-family: 'DM Sans', sans-serif;
-      font-weight: 300;
-      min-height: 100vh;
-      -webkit-font-smoothing: antialiased;
-      display: flex;
-    }
-    .sidebar {
-      position: fixed;
-      top: 0; left: 0;
-      width: var(--sidebar-w);
-      height: 100vh;
-      border-right: 1px solid var(--border);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 52px 32px 40px;
-      z-index: 100;
-      background: var(--bg);
-    }
+    body { background: var(--bg); color: var(--text-primary); font-family: 'DM Sans', sans-serif; font-weight: 300; min-height: 100vh; -webkit-font-smoothing: antialiased; display: flex; }
+    .sidebar { position: fixed; top: 0; left: 0; width: var(--sidebar-w); height: 100vh; border-right: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; padding: 52px 32px 40px; z-index: 100; background: var(--bg); }
     .sidebar-logo { display: flex; flex-direction: column; align-items: center; margin-bottom: 36px; }
     .logo-mark { font-family: 'Bebas Neue', sans-serif; font-size: 64px; letter-spacing: 0.14em; line-height: 1; color: var(--text-primary); user-select: none; }
     .logo-mark span { color: var(--accent); }
     .logo-sub { font-size: 25px; letter-spacing: 0.20em; text-transform: uppercase; color: var(--text-secondary); margin-top: 4px; }
     .sidebar-divider { width: 40px; height: 1px; background: var(--border-hover); margin: 0 auto 28px; }
     .sidebar-desc { font-size: 14px; color: var(--text-secondary); line-height: 1.8; text-align: center; max-width: 200px; }
-    .sidebar-desc strong { color: var(--text-primary); font-weight: 400; display: block; margin-bottom: 6px; font-size: 15px; }
+    .sidebar-desc strong { color: var(--text-primary); font-weight: 400; display: block; margin-bottom: 6px; font-size: 13px; }
     .sidebar-nav { margin-top: auto; display: flex; flex-direction: column; align-items: center; gap: 20px; padding-bottom: 8px; }
     .nav-link { font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
     .nav-link:hover { color: var(--text-primary); }
     .main { margin-left: var(--sidebar-w); flex: 1; min-height: 100vh; }
-    .tabs {
-      position: sticky; top: 0; z-index: 50;
-      background: rgba(10,10,10,0.94);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border-bottom: 1px solid var(--border);
-      display: flex; padding: 0 40px;
-    }
+    .tabs { position: sticky; top: 0; z-index: 50; background: rgba(10,10,10,0.94); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid var(--border); display: flex; padding: 0 40px; }
     .tab { padding: 16px 24px; font-size: 14px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-muted); cursor: pointer; border-bottom: 1px solid transparent; margin-bottom: -1px; transition: color 0.2s, border-color 0.2s; user-select: none; }
     .tab:hover { color: var(--text-secondary); }
     .tab.active { color: var(--text-primary); border-bottom-color: var(--accent); }
@@ -86,19 +53,22 @@
     .card:hover .card-cat { transform: translateY(0); }
     .card-3d { position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.65); border: 1px solid rgba(255,255,255,0.1); border-radius: 3px; padding: 3px 7px; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); opacity: 0; transform: translateY(-4px); transition: opacity 0.3s, transform 0.3s; }
     .card:hover .card-3d { opacity: 1; transform: translateY(0); }
-    .nosotros-wrap { padding: 56px 48px 80px; max-width: 820px; }
+
+    /* ── NOSOTROS: 4 columnas fijas ── */
+    .nosotros-wrap { padding: 56px 40px 80px; max-width: 100%; }
     .section-title { font-family: 'Bebas Neue', sans-serif; font-size: 30px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--accent); margin-bottom: 40px; }
-    .team-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 32px; }
-    .member-card { display: flex; flex-direction: column; gap: 16px; }
+    .team-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+    .member-card { display: flex; flex-direction: column; gap: 14px; }
     .member-photo { width: 100%; aspect-ratio: 3/4; background: var(--surface); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; display: flex; align-items: center; justify-content: center; }
     .member-photo img { width: 100%; height: 100%; object-fit: cover; display: block; filter: brightness(0.9) saturate(0.7); }
     .member-initials { font-family: 'Bebas Neue', sans-serif; font-size: 42px; letter-spacing: 0.1em; color: var(--text-muted); }
-    .member-name { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 0.12em; color: var(--text-primary); margin-bottom: 3px; }
-    .member-role { font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+    .member-name { font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 0.12em; color: var(--text-primary); margin-bottom: 3px; }
+    .member-role { font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
     .member-bio { font-size: 12px; color: var(--text-secondary); line-height: 1.8; }
-    .member-links { display: flex; gap: 12px; margin-top: 10px; }
+    .member-links { display: flex; gap: 12px; margin-top: 10px; flex-wrap: wrap; }
     .member-link { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); text-decoration: none; border-bottom: 1px solid var(--text-muted); padding-bottom: 1px; transition: color 0.2s, border-color 0.2s; }
     .member-link:hover { color: var(--text-primary); border-color: var(--text-primary); }
+
     .modal-bg { position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,0.85); display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.3s; backdrop-filter: blur(10px); }
     .modal-bg.open { opacity: 1; pointer-events: all; }
     .modal { background: var(--surface); border: 1px solid var(--border-hover); border-radius: 6px; width: min(500px, 92vw); overflow: hidden; transform: scale(0.96) translateY(10px); transition: transform 0.3s cubic-bezier(0.25,0.46,0.45,0.94); }
@@ -117,6 +87,10 @@
     footer { border-top: 1px solid var(--border); padding: 24px 48px; display: flex; align-items: center; justify-content: space-between; }
     .footer-logo { font-family: 'Bebas Neue', sans-serif; font-size: 15px; letter-spacing: 0.2em; color: var(--text-muted); }
     .footer-text { font-size: 10px; color: var(--text-muted); letter-spacing: 0.06em; }
+
+    @media (max-width: 900px) {
+      .team-grid { grid-template-columns: repeat(2, 1fr); }
+    }
     @media (max-width: 680px) {
       :root { --sidebar-w: 0px; }
       .sidebar { position: relative; width: 100%; height: auto; border-right: none; border-bottom: 1px solid var(--border); flex-direction: row; flex-wrap: wrap; padding: 20px 24px; gap: 16px; }
@@ -129,6 +103,7 @@
       body { flex-direction: column; }
       .main { margin-left: 0; }
       .feed-grid { grid-template-columns: repeat(2, 1fr); }
+      .team-grid { grid-template-columns: repeat(2, 1fr); }
       .nosotros-wrap { padding: 32px 20px 60px; }
       footer { flex-direction: column; gap: 6px; text-align: center; padding: 20px; }
     }
@@ -143,11 +118,11 @@
     </div>
     <div class="sidebar-divider"></div>
     <p class="sidebar-desc">
-      <strong>Diseño, modelado 3D, Render y Dibujo</strong>
+      <strong>Somos un equipo creativo enfocado en el desarrollo multimedia, el diseño visual y la producción digital, combinando creatividad y técnica para crear propuestas visuales innovadoras y de alta calidad. Nuestro trabajo se centra principalmente en el Modelado 3D, Renderizado y Dibujo Digital, áreas en las que desarrollamos proyectos con atención al detalle, identidad visual y enfoque artístico.</strong>
     </p>
     <nav class="sidebar-nav">
       <a href="https://sites.google.com/unimilitar.edu.co/multimedia/" target="_blank" class="nav-link">Multimedia ↗</a>
-      <a href="nexostudio.contact@gmail.com" class="nav-link">Contacto</a>
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSeaOhArAdvTYIfvdlYjThpHw9ztKdIwvvr7jnGuBDlhV_sbIQ/viewform?usp=publish-editor" class="nav-link">Contacto</a>
     </nav>
   </aside>
 
@@ -193,18 +168,18 @@
 
   <script>
     const projects = [
-      { title: "MAQUINA RETRO",       cat: "Modelado y Render",        desc: "Render de maquina retro de los años 90´s.",         sketchfab: "https://skfb.ly/pJSWC",                                                                                   img: "images/proyecto-01.png"  },
-      { title: "AXE RAGNAROK",        cat: "Render",                   desc: "Render de hacha de Ragnarok.",                       sketchfab: "https://skfb.ly/pzFMY",                                                                                  img: "images/proyecto-02.png"  },
-      { title: "ROBOT",               cat: "Render",                   desc: "Render de robot oxidado.",                             sketchfab: "https://skfb.ly/pvzzv",                                                                                  img: "images/proyecto-03.png"  },
-      { title: "MÁSCARA TENGU",          cat: "Render",                   desc: "Render de mascara.",                                sketchfab: "https://sketchfab.com/3d-models/mascara-tengu-fixed-1cac88b3943f44649d0e44e9d368c49e",                img: "images/proyecto-04.png" },
-      { title: "SPYRO",               cat: "Modelado y Render",        desc: "Modelado y Render de Spyro.",                          Youtube: "https://www.youtube.com/shorts/VMuw9bUjSTg",                                                             img: "images/proyecto-05.jpeg" },
-      { title: "BONNIE FNAF",         cat: "Modelado y Render",        desc: "Render de Bonnie de FNAF.",                            Youtube: "https://youtu.be/wwHm1ZFq4ik",                                                                           img: "images/proyecto-06.jpeg" },
-      { title: "CYBER WOMAN",         cat: "Dibujo",                   desc: "Dibujo de una mujer cyber.",                             Drive: "https://drive.google.com/file/d/1B15whVYxrk9nM5MMJetx93unhLjyaV7I/view",                                 img: "images/proyecto-07.jpeg" },
-      { title: "OCÉANO COSMICO",      cat: "Dibujo",                   desc: "Ilustración Análoga.",                               Ig: "https://www.instagram.com/p/DXVsFuLgHXI/?utm_source=ig_web_copy_link&igsh=NTc4MTIwNjQ2YQ==",             img: "images/proyecto-08.jpeg" },
-      { title: "GAFAS RAYBAN",        cat: "Animación de Producto 3D", desc: "Animación de Producto 3D de coleccion de gafas de sol RayBan.",  Ig: "https://www.instagram.com/reel/DWDJFSlDicn/?utm_source=ig_web_copy_link&igsh=NTc4MTIwNjQ2YQ==",           img: "images/proyecto-09.png"  },
-      { title: "DEADPOOL",         cat: "Modelado",                desc: "Modelo 3D de DeadPool.",                    sketchfab: "https://sketchfab.com/3d-models/dead-pool-sf-c2aa796ce44a4a3582614fd799c0acc5",                                 img: "images/proyecto-10.png"  },
-      { title: "PULPO",         cat: "Modelado",                desc: "Modelo 3D de un pulpo.",              sketchfab: "https://sketchfab.com/3d-models/pulpo-sf-ce636ef998ea4e2ba334c2826536c77e",                                         img: "images/proyecto-11.png"  },
-      { title: "CARRO SF",         cat: "Modelado",                desc:  "Modelado de Carro.",             sketchfab: "https://sketchfab.com/3d-models/carro-sf-2713285e83a445d9aba236816b10cbc8",                                    img: "images/proyecto-12.png"  },
+      { title: "MAQUINA RETRO",  cat: "Modelado y Render",        desc: "Render de maquina retro de los años 90´s.",                            sketchfab: "https://skfb.ly/pJSWC",                                                                                          img: "images/proyecto-01.png"  },
+      { title: "AXE RAGNAROK",   cat: "Render",                   desc: "Render de hacha de Ragnarok.",                                          sketchfab: "https://skfb.ly/pzFMY",                                                                                          img: "images/proyecto-02.png"  },
+      { title: "ROBOT",          cat: "Render",                   desc: "Render de robot oxidado.",                                              sketchfab: "https://skfb.ly/pvzzv",                                                                                          img: "images/proyecto-03.png"  },
+      { title: "MÁSCARA TENGU",  cat: "Render",                   desc: "Render de mascara.",                                                    sketchfab: "https://sketchfab.com/3d-models/mascara-tengu-fixed-1cac88b3943f44649d0e44e9d368c49e",                          img: "images/proyecto-04.png"  },
+      { title: "SPYRO",          cat: "Modelado y Render",        desc: "Modelado y Render de Spyro.",                                           sketchfab: "https://www.youtube.com/shorts/VMuw9bUjSTg",                                                                     img: "images/proyecto-05.jpeg" },
+      { title: "BONNIE FNAF",    cat: "Modelado y Render",        desc: "Render de Bonnie de FNAF.",                                             sketchfab: "https://youtu.be/wwHm1ZFq4ik",                                                                                  img: "images/proyecto-06.jpeg" },
+      { title: "CYBER WOMAN",    cat: "Dibujo",                   desc: "Dibujo de una mujer cyber.",                                            sketchfab: "https://drive.google.com/file/d/1B15whVYxrk9nM5MMJetx93unhLjyaV7I/view",                                        img: "images/proyecto-07.jpeg" },
+      { title: "OCÉANO COSMICO", cat: "Dibujo",                   desc: "Ilustración Análoga.",                                                  sketchfab: "https://www.instagram.com/p/DXVsFuLgHXI/?utm_source=ig_web_copy_link&igsh=NTc4MTIwNjQ2YQ==",                   img: "images/proyecto-08.jpeg" },
+      { title: "GAFAS RAYBAN",   cat: "Animación de Producto 3D", desc: "Animación de Producto 3D de coleccion de gafas de sol RayBan.",         sketchfab: "https://www.instagram.com/reel/DWDJFSlDicn/?utm_source=ig_web_copy_link&igsh=NTc4MTIwNjQ2YQ==",               img: "images/proyecto-09.png"  },
+      { title: "DEADPOOL",       cat: "Modelado",                 desc: "Modelo 3D de DeadPool.",                                                sketchfab: "https://sketchfab.com/3d-models/dead-pool-sf-c2aa796ce44a4a3582614fd799c0acc5",                                 img: "images/proyecto-10.png"  },
+      { title: "PULPO",          cat: "Modelado",                 desc: "Modelo 3D de un pulpo.",                                                sketchfab: "https://sketchfab.com/3d-models/pulpo-sf-ce636ef998ea4e2ba334c2826536c77e",                                     img: "images/proyecto-11.png"  },
+      { title: "CARRO SF",       cat: "Modelado",                 desc: "Modelado de Carro.",                                                    sketchfab: "https://sketchfab.com/3d-models/carro-sf-2713285e83a445d9aba236816b10cbc8",                                     img: "images/proyecto-12.png"  },
     ];
 
     const team = [
@@ -219,7 +194,7 @@
         name: "Daniel Sánchez",
         role: "Modelador 3D y Programador",
         bio: "Programador & Modelador 3D. Especializado en soluciones lógicas, scripts y automatización para el arte digital. Fusionando código y geometría.",
-        img: "images/3.jpeg",
+        img: "images/Foto 3.jpeg",
         links: [{ label: "LinkedIn", url: "https://www.linkedin.com/in/daniel-sanchez-1a6a72213/" }, { label: "Sketchfab", url: "https://sketchfab.com/danisan995/models" }]
       },
       {
@@ -227,14 +202,14 @@
         role: "Dibujo y modelador 3D",
         bio: "Creador del arte del achurado tradicional, junto con animación digital expresiva y modelado 3D. Soy un creativo que asume los retos y que busca activamente romper su zona de confort en cada proyecto.",
         img: "images/Foto 2.jpeg",
-        links: [{ label: "LinkedIn", url: "#" }, { label: "Sketchfab", url: "#" }]
+        links: [{ label: "", url: "#" }, { label: "", url: "#" }]
       },
       {
         name: "Juan Miguel Rodriguez",
         role: "Modelador y diseñador 3D",
         bio: "Estudiante de Ingeniería Multimedia enfocado en modelado y diseño 3D. Me motiva transformar ideas en piezas digitales atractivas mediante diseño, composición y representación visual.",
-        img: "",
-        links: [{ label: "Behance", url: "#" }, { label: "Instagram", url: "#" }]
+        img: "images/Foto 4.jpeg",
+        links: [{ label: "Sketchfab", url: "https://sketchfab.com/Lem0naadeW" }, { label: "", url: "" }]
       },
     ];
 
