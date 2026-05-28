@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NEXO — Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0a0a0a;
+      --surface: #111111;
+      --surface-hover: #181818;
+      --border: rgba(255,255,255,0.07);
+      --border-hover: rgba(255,255,255,0.16);
+      --text-primary: #f0ede8;
+      --text-secondary: #777;
+      --text-muted: #3a3a3a;
+      --accent: #c8b89a;
+      --sidebar-w: 280px;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text-primary);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      display: flex;
+    }
+    .sidebar {
+      position: fixed;
+      top: 0; left: 0;
+      width: var(--sidebar-w);
+      height: 100vh;
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 52px 32px 40px;
+      z-index: 100;
+      background: var(--bg);
+    }
+    .sidebar-logo { display: flex; flex-direction: column; align-items: center; margin-bottom: 36px; }
+    .logo-mark { font-family: 'Bebas Neue', sans-serif; font-size: 64px; letter-spacing: 0.14em; line-height: 1; color: var(--text-primary); user-select: none; }
+    .logo-mark span { color: var(--accent); }
+    .logo-sub { font-size: 25px; letter-spacing: 0.20em; text-transform: uppercase; color: var(--text-secondary); margin-top: 4px; }
+    .sidebar-divider { width: 40px; height: 1px; background: var(--border-hover); margin: 0 auto 28px; }
+    .sidebar-desc { font-size: 14px; color: var(--text-secondary); line-height: 1.8; text-align: center; max-width: 200px; }
+    .sidebar-desc strong { color: var(--text-primary); font-weight: 400; display: block; margin-bottom: 6px; font-size: 15px; }
+    .sidebar-nav { margin-top: auto; display: flex; flex-direction: column; align-items: center; gap: 20px; padding-bottom: 8px; }
+    .nav-link { font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+    .nav-link:hover { color: var(--text-primary); }
+    .main { margin-left: var(--sidebar-w); flex: 1; min-height: 100vh; }
+    .tabs {
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(10,10,10,0.94);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+      display: flex; padding: 0 40px;
+    }
+    .tab { padding: 16px 24px; font-size: 14px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-muted); cursor: pointer; border-bottom: 1px solid transparent; margin-bottom: -1px; transition: color 0.2s, border-color 0.2s; user-select: none; }
+    .tab:hover { color: var(--text-secondary); }
+    .tab.active { color: var(--text-primary); border-bottom-color: var(--accent); }
+    #section-proyectos { display: block; }
+    #section-nosotros  { display: none; }
+    .grid-wrap { padding: 3px 3px 80px; }
+    .feed-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; }
+    .card { position: relative; aspect-ratio: 1/1; overflow: hidden; cursor: pointer; background: var(--surface); }
+    .card img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.5s cubic-bezier(0.25,0.46,0.45,0.94), filter 0.4s; filter: brightness(0.85) saturate(0.75); }
+    .card:hover img { transform: scale(1.05); filter: brightness(0.55) saturate(0.5); }
+    .card-placeholder { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; background: var(--surface); transition: background 0.3s; }
+    .card:hover .card-placeholder { background: var(--surface-hover); }
+    .ph-icon { font-size: 30px; color: var(--text-muted); transition: color 0.3s; }
+    .card:hover .ph-icon { color: var(--accent); }
+    .ph-label { font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-muted); }
+    .card-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0); display: flex; flex-direction: column; justify-content: flex-end; padding: 20px 18px; opacity: 0; transition: opacity 0.35s, background 0.35s; }
+    .card:hover .card-overlay { opacity: 1; background: rgba(0,0,0,0.42); }
+    .card-title { font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 0.1em; color: #fff; transform: translateY(6px); transition: transform 0.35s; }
+    .card:hover .card-title { transform: translateY(0); }
+    .card-cat { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-top: 3px; transform: translateY(6px); transition: transform 0.35s 0.04s; }
+    .card:hover .card-cat { transform: translateY(0); }
+    .card-3d { position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.65); border: 1px solid rgba(255,255,255,0.1); border-radius: 3px; padding: 3px 7px; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); opacity: 0; transform: translateY(-4px); transition: opacity 0.3s, transform 0.3s; }
+    .card:hover .card-3d { opacity: 1; transform: translateY(0); }
+    .nosotros-wrap { padding: 56px 48px 80px; max-width: 820px; }
+    .section-title { font-family: 'Bebas Neue', sans-serif; font-size: 30px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--accent); margin-bottom: 40px; }
+    .team-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 32px; }
+    .member-card { display: flex; flex-direction: column; gap: 16px; }
+    .member-photo { width: 100%; aspect-ratio: 3/4; background: var(--surface); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+    .member-photo img { width: 100%; height: 100%; object-fit: cover; display: block; filter: brightness(0.9) saturate(0.7); }
+    .member-initials { font-family: 'Bebas Neue', sans-serif; font-size: 42px; letter-spacing: 0.1em; color: var(--text-muted); }
+    .member-name { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 0.12em; color: var(--text-primary); margin-bottom: 3px; }
+    .member-role { font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+    .member-bio { font-size: 12px; color: var(--text-secondary); line-height: 1.8; }
+    .member-links { display: flex; gap: 12px; margin-top: 10px; }
+    .member-link { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); text-decoration: none; border-bottom: 1px solid var(--text-muted); padding-bottom: 1px; transition: color 0.2s, border-color 0.2s; }
+    .member-link:hover { color: var(--text-primary); border-color: var(--text-primary); }
+    .modal-bg { position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,0.85); display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.3s; backdrop-filter: blur(10px); }
+    .modal-bg.open { opacity: 1; pointer-events: all; }
+    .modal { background: var(--surface); border: 1px solid var(--border-hover); border-radius: 6px; width: min(500px, 92vw); overflow: hidden; transform: scale(0.96) translateY(10px); transition: transform 0.3s cubic-bezier(0.25,0.46,0.45,0.94); }
+    .modal-bg.open .modal { transform: scale(1) translateY(0); }
+    .modal-img-wrap { width: 100%; aspect-ratio: 16/9; background: #141414; display: flex; align-items: center; justify-content: center; overflow: hidden; font-size: 52px; color: var(--text-muted); }
+    .modal-img-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .modal-body { padding: 24px 28px 28px; }
+    .modal-cat { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); margin-bottom: 6px; }
+    .modal-title { font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: 0.1em; color: var(--text-primary); margin-bottom: 10px; }
+    .modal-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.8; margin-bottom: 24px; }
+    .modal-actions { display: flex; gap: 10px; }
+    .btn-primary { flex: 1; padding: 12px 0; background: var(--accent); color: #0a0a0a; border: none; border-radius: 3px; font-family: 'DM Sans', sans-serif; font-size: 10px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 6px; transition: background 0.2s; }
+    .btn-primary:hover { background: #ddd0b7; }
+    .btn-secondary { padding: 12px 20px; background: transparent; color: var(--text-secondary); border: 1px solid var(--border-hover); border-radius: 3px; font-family: 'DM Sans', sans-serif; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer; transition: color 0.2s, border-color 0.2s; }
+    .btn-secondary:hover { color: var(--text-primary); border-color: var(--text-secondary); }
+    footer { border-top: 1px solid var(--border); padding: 24px 48px; display: flex; align-items: center; justify-content: space-between; }
+    .footer-logo { font-family: 'Bebas Neue', sans-serif; font-size: 15px; letter-spacing: 0.2em; color: var(--text-muted); }
+    .footer-text { font-size: 10px; color: var(--text-muted); letter-spacing: 0.06em; }
+    @media (max-width: 680px) {
+      :root { --sidebar-w: 0px; }
+      .sidebar { position: relative; width: 100%; height: auto; border-right: none; border-bottom: 1px solid var(--border); flex-direction: row; flex-wrap: wrap; padding: 20px 24px; gap: 16px; }
+      .sidebar-logo { flex-direction: row; align-items: baseline; gap: 10px; margin-bottom: 0; }
+      .logo-mark { font-size: 36px; }
+      .logo-sub { margin-top: 0; }
+      .sidebar-divider { display: none; }
+      .sidebar-desc { text-align: left; max-width: none; }
+      .sidebar-nav { flex-direction: row; margin-top: 0; }
+      body { flex-direction: column; }
+      .main { margin-left: 0; }
+      .feed-grid { grid-template-columns: repeat(2, 1fr); }
+      .nosotros-wrap { padding: 32px 20px 60px; }
+      footer { flex-direction: column; gap: 6px; text-align: center; padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-mark">NEX<span>O</span></div>
+      <div class="logo-sub">Studio</div>
+    </div>
+    <div class="sidebar-divider"></div>
+    <p class="sidebar-desc">
+      <strong>Diseño, modelado 3D, Render y Dibujo</strong>
+    </p>
+    <nav class="sidebar-nav">
+      <a href="https://sites.google.com/unimilitar.edu.co/multimedia/" target="_blank" class="nav-link">Multimedia ↗</a>
+      <a href="nexostudio.contact@gmail.com" class="nav-link">Contacto</a>
+    </nav>
+  </aside>
+
+  <main class="main">
+    <div class="tabs">
+      <div class="tab active" data-tab="proyectos">Proyectos</div>
+      <div class="tab" data-tab="nosotros">Nosotros</div>
+    </div>
+
+    <section id="section-proyectos">
+      <div class="grid-wrap">
+        <div class="feed-grid" id="feedGrid"></div>
+      </div>
+    </section>
+
+    <section id="section-nosotros">
+      <div class="nosotros-wrap">
+        <div class="section-title">El equipo</div>
+        <div class="team-grid" id="teamGrid"></div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="footer-logo">NEXO</div>
+      <div class="footer-text">© 2026</div>
+    </footer>
+  </main>
+
+  <div class="modal-bg" id="modal" role="dialog" aria-modal="true">
+    <div class="modal">
+      <div class="modal-img-wrap" id="modalImgWrap">⬡</div>
+      <div class="modal-body">
+        <div class="modal-cat" id="modalCat"></div>
+        <div class="modal-title" id="modalTitle"></div>
+        <div class="modal-desc" id="modalDesc"></div>
+        <div class="modal-actions">
+          <a href="#" id="modalLink" target="_blank" class="btn-primary">Ver modelo 3D →</a>
+          <button class="btn-secondary" id="modalClose">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const projects = [
+      { title: "MAQUINA RETRO",       cat: "Modelado y Render",        desc: "Render de maquina retro de los años 90´s.",         sketchfab: "https://skfb.ly/pJSWC",                                                                                   img: "images/proyecto-01.png"  },
+      { title: "AXE RAGNAROK",        cat: "Render",                   desc: "Render de hacha de Ragnarok.",                       sketchfab: "https://skfb.ly/pzFMY",                                                                                  img: "images/proyecto-02.png"  },
+      { title: "ROBOT",               cat: "Render",                   desc: "Render de robot oxidado.",                             sketchfab: "https://skfb.ly/pvzzv",                                                                                  img: "images/proyecto-03.png"  },
+      { title: "MÁSCARA TENGU",          cat: "Render",                   desc: "Render de mascara.",                                sketchfab: "https://sketchfab.com/3d-models/mascara-tengu-fixed-1cac88b3943f44649d0e44e9d368c49e",                img: "images/proyecto-04.png" },
+      { title: "SPYRO",               cat: "Modelado y Render",        desc: "Modelado y Render de Spyro.",                          Youtube: "https://www.youtube.com/shorts/VMuw9bUjSTg",                                                             img: "images/proyecto-05.jpeg" },
+      { title: "BONNIE FNAF",         cat: "Modelado y Render",        desc: "Render de Bonnie de FNAF.",                            Youtube: "https://youtu.be/wwHm1ZFq4ik",                                                                           img: "images/proyecto-06.jpeg" },
+      { title: "CYBER WOMAN",         cat: "Dibujo",                   desc: "Dibujo de una mujer cyber.",                             Drive: "https://drive.google.com/file/d/1B15whVYxrk9nM5MMJetx93unhLjyaV7I/view",                                 img: "images/proyecto-07.jpeg" },
+      { title: "OCÉANO COSMICO",      cat: "Dibujo",                   desc: "Ilustración Análoga.",                               Ig: "https://www.instagram.com/p/DXVsFuLgHXI/?utm_source=ig_web_copy_link&igsh=NTc4MTIwNjQ2YQ==",             img: "images/proyecto-08.jpeg" },
+      { title: "GAFAS RAYBAN",        cat: "Animación de Producto 3D", desc: "Animación de Producto 3D de coleccion de gafas de sol RayBan.",  Ig: "https://www.instagram.com/reel/DWDJFSlDicn/?utm_source=ig_web_copy_link&igsh=NTc4MTIwNjQ2YQ==",           img: "images/proyecto-09.png"  },
+      { title: "DEADPOOL",         cat: "Modelado",                desc: "Modelo 3D de DeadPool.",                    sketchfab: "https://sketchfab.com/3d-models/dead-pool-sf-c2aa796ce44a4a3582614fd799c0acc5",                                 img: "images/proyecto-10.png"  },
+      { title: "PULPO",         cat: "Modelado",                desc: "Modelo 3D de un pulpo.",              sketchfab: "https://sketchfab.com/3d-models/pulpo-sf-ce636ef998ea4e2ba334c2826536c77e",                                         img: "images/proyecto-11.png"  },
+      { title: "CARRO SF",         cat: "Modelado",                desc:  "Modelado de Carro.",             sketchfab: "https://sketchfab.com/3d-models/carro-sf-2713285e83a445d9aba236816b10cbc8",                                    img: "images/proyecto-12.png"  },
+    ];
+
+    const team = [
+      {
+        name: "Nicolas Rozo",
+        role: "Animador y Modelador 3D",
+        bio: "Soy animador y modelador 3D enfocado en crear piezas visuales con personalidad y detalle. Me interesa combinar movimiento, composición y narrativa para transformar ideas en experiencias más auténticas y memorables.",
+        img: "images/Foto 1.jpeg",
+        links: [{ label: "LinkedIn", url: "https://www.linkedin.com/in/nicolas-alejandro-rozo-mejia-5a895027b/" }, { label: "Sketchfab", url: "https://sketchfab.com/est.nicolas.arozo" }]
+      },
+      {
+        name: "Daniel Sánchez",
+        role: "Modelador 3D y Programador",
+        bio: "Programador & Modelador 3D. Especializado en soluciones lógicas, scripts y automatización para el arte digital. Fusionando código y geometría.",
+        img: "images/3.jpeg",
+        links: [{ label: "LinkedIn", url: "https://www.linkedin.com/in/daniel-sanchez-1a6a72213/" }, { label: "Sketchfab", url: "https://sketchfab.com/danisan995/models" }]
+      },
+      {
+        name: "Juan Pablo Ochoa",
+        role: "Dibujo y modelador 3D",
+        bio: "Creador del arte del achurado tradicional, junto con animación digital expresiva y modelado 3D. Soy un creativo que asume los retos y que busca activamente romper su zona de confort en cada proyecto.",
+        img: "images/Foto 2.jpeg",
+        links: [{ label: "LinkedIn", url: "#" }, { label: "Sketchfab", url: "#" }]
+      },
+      {
+        name: "Juan Miguel Rodriguez",
+        role: "Modelador y diseñador 3D",
+        bio: "Estudiante de Ingeniería Multimedia enfocado en modelado y diseño 3D. Me motiva transformar ideas en piezas digitales atractivas mediante diseño, composición y representación visual.",
+        img: "",
+        links: [{ label: "Behance", url: "#" }, { label: "Instagram", url: "#" }]
+      },
+    ];
+
+    function initials(name) {
+      return name.split(" ").slice(0,2).map(w => w[0]).join("").toUpperCase();
+    }
+
+    const grid = document.getElementById("feedGrid");
+    projects.forEach((p, i) => {
+      const card = document.createElement("div");
+      card.className = "card";
+      card.setAttribute("tabindex", "0");
+      const inner = p.img
+        ? `<img src="${p.img}" alt="${p.title}" loading="lazy" />`
+        : `<div class="card-placeholder"><div class="ph-icon">⬡</div><div class="ph-label">${p.cat}</div></div>`;
+      card.innerHTML = `${inner}<div class="card-3d">3D</div><div class="card-overlay"><div class="card-title">${p.title}</div><div class="card-cat">${p.cat}</div></div>`;
+      card.style.cssText = `opacity:0;transform:translateY(8px);transition:opacity .35s ease ${i*0.05}s,transform .35s ease ${i*0.05}s`;
+      grid.appendChild(card);
+      requestAnimationFrame(() => requestAnimationFrame(() => { card.style.opacity="1"; card.style.transform="translateY(0)"; }));
+      card.addEventListener("click", () => openModal(p));
+      card.addEventListener("keydown", e => { if(e.key==="Enter") openModal(p); });
+    });
+
+    const teamGrid = document.getElementById("teamGrid");
+    team.forEach(m => {
+      const el = document.createElement("div");
+      el.className = "member-card";
+      const photoInner = m.img ? `<img src="${m.img}" alt="${m.name}" />` : `<div class="member-initials">${initials(m.name)}</div>`;
+      const linksHtml = m.links.map(l => `<a href="${l.url}" target="_blank" class="member-link">${l.label}</a>`).join("");
+      el.innerHTML = `<div class="member-photo">${photoInner}</div><div class="member-info"><div class="member-name">${m.name}</div><div class="member-role">${m.role}</div><p class="member-bio">${m.bio}</p><div class="member-links">${linksHtml}</div></div>`;
+      teamGrid.appendChild(el);
+    });
+
+    const modal      = document.getElementById("modal");
+    const modalLink  = document.getElementById("modalLink");
+    const modalTitle = document.getElementById("modalTitle");
+    const modalDesc  = document.getElementById("modalDesc");
+    const modalCat   = document.getElementById("modalCat");
+    const modalImgW  = document.getElementById("modalImgWrap");
+
+    function openModal(p) {
+      modalTitle.textContent = p.title;
+      modalDesc.textContent  = p.desc;
+      modalCat.textContent   = p.cat;
+      modalLink.href         = p.sketchfab;
+      modalImgW.innerHTML    = p.img ? `<img src="${p.img}" alt="${p.title}" />` : "⬡";
+      modal.classList.add("open");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeModal() {
+      modal.classList.remove("open");
+      document.body.style.overflow = "";
+    }
+
+    document.getElementById("modalClose").addEventListener("click", closeModal);
+    modal.addEventListener("click", e => { if(e.target===modal) closeModal(); });
+    document.addEventListener("keydown", e => { if(e.key==="Escape") closeModal(); });
+
+    document.querySelectorAll(".tab").forEach(tab => {
+      tab.addEventListener("click", () => {
+        document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+        tab.classList.add("active");
+        const t = tab.dataset.tab;
+        document.getElementById("section-proyectos").style.display = t==="proyectos" ? "block" : "none";
+        document.getElementById("section-nosotros").style.display  = t==="nosotros"  ? "block" : "none";
+      });
+    });
+  </script>
+</body>
+</html>
